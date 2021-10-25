@@ -34,14 +34,14 @@ data "terraform_remote_state" "iks" {
 }
 
 output "test" {
-  value = data.terraform_remote_state.iks
+  value = local.kube_config
 }
 
-// ### Decode Kube Config ###
-// locals {
-//   kube_config = yamldecode(base64decode(data.terraform_remote_state.iks.kube_config))
-// }
-//
+### Decode Kube Config ###
+locals {
+  kube_config = yamldecode(base64decode(data.terraform_remote_state.iks.outputs.kube_config))
+}
+
 //
 // ### Providers ###
 // provider "kubernetes" {
