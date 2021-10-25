@@ -3,7 +3,7 @@ terraform {
     hostname = "app.terraform.io"
     organization = "mel-ciscolabs-com"
     workspaces {
-      name = "tfcb-iks-fso-bookinfo"
+      name = "fso-bookinfo-helm"
     }
   }
   required_providers {
