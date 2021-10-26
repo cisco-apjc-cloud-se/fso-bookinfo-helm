@@ -3,5 +3,5 @@ output "svc" {
 }
 
 output "pods" {
-  value = data.kubectl-query_services.pods
+  value = data.kubectl-query_pods.pods
 }
