@@ -90,28 +90,28 @@ resource "kubernetes_namespace" "bookinfo" {
   }
 }
 
-// ### Helm ###
-//
-// ## Add IWO K8S Collector  ##
-// resource "helm_release" "iwo-collector" {
-//  namespace   = kubernetes_namespace.iwo-collector.metadata[0].name
-//  name        = "iwo-collector"
-//
-//  // repository  = "https://helm.releases.hashicorp.com"
-//  chart       = "https://iwo-k8s-collector.s3.ap-southeast-2.amazonaws.com/iwo-k8s-collector-v1.0.1.tar.gz"
-//
-//  set {
-//    name  = "iwoServerVersion"
-//    value = "8.2"
-//  }
-//
-//  set {
-//    name  = "collectorImage.tag"
-//    value = "8.2.1"
-//  }
-//
-//  set {
-//    name  = "targetName"
-//    value = "iks-cpoc-bookinfo"
-//  }
-// }
+### Helm ###
+
+## Add IWO K8S Collector  ##
+resource "helm_release" "iwo-collector" {
+ namespace   = kubernetes_namespace.iwo-collector.metadata[0].name
+ name        = "iwo-collector"
+
+ // repository  = "https://helm.releases.hashicorp.com"
+ chart       = "https://iwo-k8s-collector.s3.ap-southeast-2.amazonaws.com/iwo-k8s-collector-v1.0.1.tar.gz"
+
+ set {
+   name  = "iwoServerVersion"
+   value = "8.2"
+ }
+
+ set {
+   name  = "collectorImage.tag"
+   value = "8.2.1"
+ }
+
+ set {
+   name  = "targetName"
+   value = "iks-cpoc-bookinfo"
+ }
+}
