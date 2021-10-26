@@ -70,9 +70,9 @@ resource "kubernetes_namespace" "iwo-collector" {
   metadata {
     annotations = {
       name = "iwo-collector"
-      labels = {
-        app = "iwo"
-      }
+    }
+    labels = {
+      app = "iwo"
     }
     name = "iwo-collector"
   }
@@ -82,9 +82,9 @@ resource "kubernetes_namespace" "bookinfo" {
   metadata {
     annotations = {
       name = "bookinfo"
-      labels = {
-        app = "bookinfo"
-      }
+    }
+    labels = {
+      app = "bookinfo"
     }
     name = "bookinfo"
   }
