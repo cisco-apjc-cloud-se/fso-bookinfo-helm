@@ -18,6 +18,10 @@ terraform {
     kubernetes = {
       source = "hashicorp/kubernetes"
     }
+    kubectl-query = {
+      source  = "styczynski/kubectl-query"
+      # version = ">= 1.7.0"
+    }
   }
 }
 
@@ -60,6 +64,17 @@ provider "helm" {
     client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
     client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
   }
+}
+
+provider "kubectl-query" {
+  host                    = local.kube_config.clusters[0].cluster.server
+  cluster_ca_certificate  = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
+  client_certificate      = base64decode(local.kube_config.users[0].user.client-certificate-data)
+  client_key              = base64decode(local.kube_config.users[0].user.client-key-data)
+  # token                  = data.aws_eks_cluster_auth.main.token
+  # load_config_file       = false
+  # insecure = true
+
 }
 
 ### Kubernetes  ###
@@ -113,6 +128,14 @@ resource "helm_release" "iwo-collector" {
    name  = "targetName"
    value = var.iwo_cluster_name
  }
+}
+
+data "kubectl-query_services" "svc" {
+
+}
+
+data "kubectl-query_pods" "pods" {
+
 }
 
 // // kubectl -n iwo-collector port-forward my-iwo-k8s-collector-57fcb8b874-s5ch8 9110
