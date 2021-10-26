@@ -115,24 +115,24 @@ resource "helm_release" "iwo-collector" {
  }
 }
 
-// kubectl -n iwo-collector port-forward my-iwo-k8s-collector-57fcb8b874-s5ch8 9110
-// curl -s http://localhost:9110/DeviceIdentifiers
-// curl -s http://localhost:9110/SecurityTokens
-
-locals {
-  pod_name = "iwok8scollector-iwo-collector-8f67f989f-ksxp5"
-}
-
-## Test Provisioner for Geting IWO A
-resource "null_resource" "test" {
-  provisioner "local-exec" {
-    command = "kubectl --server='$(local.kube_config.clusters[0].cluster.server)' --client-certificate='$(base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data))' --client-key='$(base64decode(local.kube_config.users[0].user.client-key-data))' --certificate-authority='$(base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data))' -n $(kubernetes_namespace.iwo-collector.metadata[0].name) port-forward $(var.pod_name) 9110"
-    // interpreter = ["PowerShell", "-Command"]
-  }
-  provisioner "local-exec" {
-    command = "curl -s http://localhost:9110/DeviceIdentifiers"
-  }
-  provisioner "local-exec" {
-    command = "curl -s http://localhost:9110/SecurityTokens"
-  }
-}
+// // kubectl -n iwo-collector port-forward my-iwo-k8s-collector-57fcb8b874-s5ch8 9110
+// // curl -s http://localhost:9110/DeviceIdentifiers
+// // curl -s http://localhost:9110/SecurityTokens
+//
+// locals {
+//   pod_name = "iwok8scollector-iwo-collector-8f67f989f-ksxp5"
+// }
+//
+// ## Test Provisioner for Geting IWO A
+// resource "null_resource" "test" {
+//   provisioner "local-exec" {
+//     command = "kubectl --server='$(local.kube_config.clusters[0].cluster.server)' --client-certificate='$(base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data))' --client-key='$(base64decode(local.kube_config.users[0].user.client-key-data))' --certificate-authority='$(base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data))' -n $(kubernetes_namespace.iwo-collector.metadata[0].name) port-forward $(var.pod_name) 9110"
+//     // interpreter = ["PowerShell", "-Command"]
+//   }
+//   provisioner "local-exec" {
+//     command = "curl -s http://localhost:9110/DeviceIdentifiers"
+//   }
+//   provisioner "local-exec" {
+//     command = "curl -s http://localhost:9110/SecurityTokens"
+//   }
+// }
