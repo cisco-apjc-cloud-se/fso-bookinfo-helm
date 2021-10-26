@@ -42,42 +42,54 @@ locals {
   kube_config = yamldecode(base64decode(data.terraform_remote_state.iks.outputs.kube_config))
 }
 
-//
-// ### Providers ###
-// provider "kubernetes" {
-//   # alias = "iks-k8s"
-//
-//   host                   = local.kube_config.clusters[0].cluster.server
-//   cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
-//   client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
-//   client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
-// }
-//
-// provider "helm" {
-//   kubernetes {
-//     host                   = local.kube_config.clusters[0].cluster.server
-//     cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
-//     client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
-//     client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
-//   }
-// }
-//
-// ### Kubernetes  ###
-//
-// ### Add Namespaces ###
-//
-// resource "kubernetes_namespace" "iwo-collector" {
-//   metadata {
-//     annotations = {
-//       name = "iwo-collector"
-//       labels = {
-//         app = "iwo"
-//       }
-//     }
-//     name = "iwo-collector"
-//   }
-// }
-//
+
+### Providers ###
+provider "kubernetes" {
+  # alias = "iks-k8s"
+
+  host                   = local.kube_config.clusters[0].cluster.server
+  cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
+  client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
+  client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = local.kube_config.clusters[0].cluster.server
+    cluster_ca_certificate = base64decode(local.kube_config.clusters[0].cluster.certificate-authority-data)
+    client_certificate     = base64decode(local.kube_config.users[0].user.client-certificate-data)
+    client_key             = base64decode(local.kube_config.users[0].user.client-key-data)
+  }
+}
+
+### Kubernetes  ###
+
+### Add Namespaces ###
+
+resource "kubernetes_namespace" "iwo-collector" {
+  metadata {
+    annotations = {
+      name = "iwo-collector"
+      labels = {
+        app = "iwo"
+      }
+    }
+    name = "iwo-collector"
+  }
+}
+
+resource "kubernetes_namespace" "bookinfo" {
+  metadata {
+    annotations = {
+      name = "bookinfo"
+      labels = {
+        app = "bookinfo"
+      }
+    }
+    name = "bookinfo"
+  }
+}
+
 // ### Helm ###
 //
 // ## Add IWO K8S Collector  ##
