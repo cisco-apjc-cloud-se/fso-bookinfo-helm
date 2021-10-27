@@ -172,7 +172,7 @@ resource "helm_release" "appd-cluster-agent" {
 
  set {
    name = "controllerInfo.url"
-   value = "$(var.appd_account_name).saas.appdynamics.com"
+   value = format("%s.saas.appdynamics.com", var.appd_account_name)
  }
 
  set {
