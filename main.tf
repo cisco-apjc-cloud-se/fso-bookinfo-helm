@@ -86,6 +86,18 @@ resource "kubernetes_namespace" "bookinfo" {
   }
 }
 
+resource "kubernetes_namespace" "appd" {
+  metadata {
+    annotations = {
+      name = "appdynamics"
+    }
+    labels = {
+      app = "appdynamics"
+    }
+    name = "appdynamics"
+  }
+}
+
 ### Helm ###
 
 ## Add IWO K8S Collector Release ##
@@ -147,6 +159,52 @@ resource "helm_release" "bookinfo" {
    name  = "productPageService.replicaCount"
    value = var.productPageService_replica_count
  }
+
+}
+
+## Add Appd Cluster Agent Release  ##
+resource "helm_release" "appd-cluster-agent" {
+ namespace   = kubernetes_namespace.appd.metadata[0].name
+ name        = "appd-cluster-agent"
+
+ repository  = "https://ciscodevnet.github.io/appdynamics-charts"
+ chart       = "cluster-agent"
+
+ set {
+   name = "controllerInfo.url"
+   value = "$(var.appd_account_name).saas.appdynamics.com"
+ }
+
+ set {
+   name = "controllerInfo.account"
+   value = var.appd_account_name
+ }
+
+ set {
+   name = "controllerInfo.accessKey"
+   value = var.appd_account_key
+ }
+
+
+ // values = [<<EOF
+ // imageInfo:
+ //   agentImage: docker.io/appdynamics/cluster-agent
+ //   agentTag: 20.7.0
+ //   operatorImage: docker.io/appdynamics/cluster-agent-operator
+ //   operatorTag: latest
+ //   imagePullPolicy: Always
+ //
+ // controllerInfo:
+ //   url: <controller-url>
+ //   account: <controller-account>
+ //   username: <controller-username>
+ //   password: <controller-password>
+ //   accessKey: <controller-accesskey>
+ //
+ // agentServiceAccount: appdynamics-cluster-agent
+ // operatorServiceAccount: appdynamics-operator
+ // EOF
+ // ]
 
 }
 
