@@ -98,6 +98,18 @@ resource "kubernetes_namespace" "appd" {
   }
 }
 
+resource "kubernetes_namespace" "metrics" {
+  metadata {
+    annotations = {
+      name = "metrics"
+    }
+    labels = {
+      app = "metrics"
+    }
+    name = "metrics"
+  }
+}
+
 ### Helm ###
 
 ## Add IWO K8S Collector Release ##
@@ -162,6 +174,17 @@ resource "helm_release" "bookinfo" {
 
 }
 
+## Add Metrics Server Release ##
+# - Required for AppD Cluster Agent
+
+resource "helm_release" "metrics-server" {
+  name = "metrics-server"
+  namespace = "metrics"
+  repository = "https://charts.bitnami.com/bitnami"
+  chart = "metrics-server"
+
+}
+
 ## Add Appd Cluster Agent Release  ##
 resource "helm_release" "appd-cluster-agent" {
  namespace   = kubernetes_namespace.appd.metadata[0].name
@@ -185,10 +208,10 @@ resource "helm_release" "appd-cluster-agent" {
    value = var.appd_account_key
  }
 
- set {
-   name = "install.metrics-server"
-   value = true
- }
+ // set {
+ //   name = "install.metrics-server"
+ //   value = true
+ // }
 
  // values = [<<EOF
  // imageInfo:
