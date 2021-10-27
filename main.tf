@@ -183,6 +183,11 @@ resource "helm_release" "metrics-server" {
   repository = "https://charts.bitnami.com/bitnami"
   chart = "metrics-server"
 
+  set {
+    name = "apiService.create"
+    value = true
+  }
+
 }
 
 ## Add Appd Cluster Agent Release  ##
