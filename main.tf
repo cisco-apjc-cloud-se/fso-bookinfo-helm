@@ -188,6 +188,11 @@ resource "helm_release" "metrics-server" {
     value = true
   }
 
+  set {
+    name = "extraArgs"
+    value = "--kubelet-insecure-tls --kubelet-preferred-address-types=InternalIP"
+  }
+
 }
 
 ## Add Appd Cluster Agent Release  ##
