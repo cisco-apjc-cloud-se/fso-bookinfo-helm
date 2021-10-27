@@ -113,7 +113,7 @@ resource "helm_release" "iwo-collector" {
 
 data "kubernetes_pod" "iwo" {
   metadata {
-    name = helm_release.iwo-collector.name
+    // name = helm_release.iwo-collector.name
     namespace = kubernetes_namespace.iwo-collector.metadata[0].name
   }
 }
