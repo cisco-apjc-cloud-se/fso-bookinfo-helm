@@ -88,7 +88,7 @@ resource "kubernetes_namespace" "bookinfo" {
 
 ### Helm ###
 
-## Add IWO K8S Collector  ##
+## Add IWO K8S Collector Release ##
 resource "helm_release" "iwo-collector" {
  namespace   = kubernetes_namespace.iwo-collector.metadata[0].name
  name        = "iwo-collector"
@@ -111,11 +111,43 @@ resource "helm_release" "iwo-collector" {
  }
 }
 
-data "kubernetes_pod" "iwo" {
-  metadata {
-    // name = helm_release.iwo-collector.name
-    namespace = kubernetes_namespace.iwo-collector.metadata[0].name
-  }
+## Add Bookinfo Release  ##
+resource "helm_release" "bookinfo" {
+ namespace   = kubernetes_namespace.bookinfo.metadata[0].name
+ name        = "bookinfo"
+
+ chart       = var.bookinfo_chart_url
+
+ set {
+   name  = "appDynamics.account_name"
+   value = var.appd_account_name
+ }
+
+ set {
+   name  = "appDynamics.account_key"
+   value = var.appd_account_key
+ }
+
+ set {
+   name  = "detailsService.replicaCount"
+   value = var.detailsService_replica_count
+ }
+
+ set {
+   name  = "ratingsService.replicaCount"
+   value = var.ratingsService_replica_count
+ }
+
+ set {
+   name  = "reviewsService.replicaCount"
+   value = var.reviewsService_replica_count
+ }
+
+ set {
+   name  = "productPageService.replicaCount"
+   value = var.productPageService_replica_count
+ }
+
 }
 
 // // kubectl -n iwo-collector port-forward my-iwo-k8s-collector-57fcb8b874-s5ch8 9110
