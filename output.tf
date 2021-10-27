@@ -1,3 +1,3 @@
-output "iwo-pods" {
-  value = data.kubernetes_pod.iwo
-}
+// output "iwo-pods" {
+//   value = data.kubernetes_pod.iwo
+// }
