@@ -185,6 +185,10 @@ resource "helm_release" "appd-cluster-agent" {
    value = var.appd_account_key
  }
 
+ set {
+   name = "install.metrics-server"
+   value = true
+ }
 
  // values = [<<EOF
  // imageInfo:
