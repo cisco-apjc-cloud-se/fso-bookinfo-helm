@@ -288,6 +288,11 @@ resource "helm_release" "appd-machine-agent" {
    value = true
  }
 
+ set {
+   name = "openshift.scc"
+   value = false
+ }
+
 }
 
 //  ## Add Kube State Metrics Release  ##
