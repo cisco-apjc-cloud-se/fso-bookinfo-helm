@@ -188,11 +188,21 @@ resource "helm_release" "metrics-server" {
     value = true
   }
 
-  ### Need to double escape the comma
   set {
-    name = "extraArgs"
-    value = "[--kubelet-insecure-tls\\,kubelet-preferred-address-types=InternalIP]"
+    name = "extraArgs.kubelet-insecure-tls"
+    value = true
   }
+
+  set {
+    name = "extraArgs.kubelet-preferred-address-types"
+    value = "InternalIP"
+  }
+
+  ### Need to double escape the comma
+  // set {
+  //   name = "extraArgs"
+  //   value = "[--kubelet-insecure-tls\\,kubelet-preferred-address-types=InternalIP]"
+  // }
 
 }
 
