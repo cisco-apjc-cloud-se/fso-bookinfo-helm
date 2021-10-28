@@ -229,25 +229,15 @@ resource "helm_release" "appd-cluster-agent" {
    value = ".*"
  }
 
- // values = [<<EOF
- // imageInfo:
- //   agentImage: docker.io/appdynamics/cluster-agent
- //   agentTag: 20.7.0
- //   operatorImage: docker.io/appdynamics/cluster-agent-operator
- //   operatorTag: latest
- //   imagePullPolicy: Always
- //
- // controllerInfo:
- //   url: <controller-url>
- //   account: <controller-account>
- //   username: <controller-username>
- //   password: <controller-password>
- //   accessKey: <controller-accesskey>
- //
- // agentServiceAccount: appdynamics-cluster-agent
- // operatorServiceAccount: appdynamics-operator
- // EOF
- // ]
+}
+
+ ## Add Kube State Metrics Release  ##
+ resource "helm_release" "kube-state-metrics" {
+  namespace   = "kube-system"
+  name        = "kube-state-metrics"
+
+  repository  = "https://prometheus-community.github.io/helm-charts"
+  chart       = "kube-state-metrics"
 
 }
 
