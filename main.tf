@@ -216,7 +216,7 @@ resource "helm_release" "appd-cluster-agent" {
 
  set {
    name = "controllerInfo.url"
-   value = format("%s.saas.appdynamics.com", var.appd_account_name)
+   value = format("https://%s.saas.appdynamics.com:443", var.appd_account_name)
  }
 
  set {
