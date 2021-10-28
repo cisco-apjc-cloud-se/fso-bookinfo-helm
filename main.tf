@@ -231,6 +231,55 @@ resource "helm_release" "appd-cluster-agent" {
 
 }
 
+## Add Appd Machine Agent Release  ##
+resource "helm_release" "appd-machine-agent" {
+ namespace   = kubernetes_namespace.appd.metadata[0].name
+ name        = "appd-machine-agent"
+
+ repository  = "https://ciscodevnet.github.io/appdynamics-charts"
+ chart       = "machine-agent"
+
+ // helm install --namespace=appdynamics \
+ // --set .accessKey=<controller-key> \
+ // --set .host=<*.saas.appdynamics.com> \
+ // --set controller.port=443 --set controller.ssl=true \
+ // --set controller.accountName=<account-name> \
+ // --set controller.globalAccountName=<global-account-name> \
+ // --set analytics.eventEndpoint=https://analytics.api.appdynamics.com \
+ // --set agent.netviz=true serverviz appdynamics-charts/machine-agent
+
+ set {
+   name = "controller.host"
+   value = format("%s.saas.appdynamics.com", var.appd_account_name)
+ }
+
+ set {
+   name = "controller.port"
+   value = 443
+ }
+
+ set {
+   name = "controller.ssl"
+   value = true
+ }
+
+ set {
+   name = "controller.accountName"
+   value = var.appd_account_name
+ }
+
+ set {
+   name = "controller.accessKey"
+   value = var.appd_account_key
+ }
+
+ set {
+   name = "agent.netviz"
+   value = true
+ }
+
+}
+
 //  ## Add Kube State Metrics Release  ##
 //  resource "helm_release" "kube-state-metrics" {
 //   namespace   = "kube-system"
