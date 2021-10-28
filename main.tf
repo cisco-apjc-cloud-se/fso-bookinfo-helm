@@ -229,7 +229,7 @@ resource "helm_release" "appd-cluster-agent" {
  // }
 
  set {
-   name = "nsToMonitor"
+   name = "clusterAgent.nsToMonitor"
    value = "[bookinfo]"
  }
 
