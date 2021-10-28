@@ -191,7 +191,7 @@ resource "helm_release" "metrics-server" {
   ### Need to double escape the comma
   set {
     name = "extraArgs"
-    value = "--kubelet-insecure-tls\\,--kubelet-preferred-address-types=InternalIP"
+    value = "[--kubelet-insecure-tls\\,kubelet-preferred-address-types=InternalIP]"
   }
 
 }
