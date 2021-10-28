@@ -223,14 +223,10 @@ resource "helm_release" "appd-cluster-agent" {
    value = var.appd_account_key
  }
 
- // set {
- //   name = "install.metrics-server"
- //   value = true
- // }
-
+ ## Monitor All Namespaces
  set {
-   name = "clusterAgent.nsToMonitor"
-   value = "[bookinfo]"
+   name = "clusterAgent.nsToMonitorRegex"
+   value = ".*"
  }
 
  // values = [<<EOF
