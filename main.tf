@@ -249,6 +249,11 @@ resource "helm_release" "appd-machine-agent" {
  // --set agent.netviz=true serverviz appdynamics-charts/machine-agent
 
  set {
+   name = "controller.accessKey"
+   value = var.appd_account_key
+ }
+
+ set {
    name = "controller.host"
    value = format("%s.saas.appdynamics.com", var.appd_account_name)
  }
@@ -269,8 +274,13 @@ resource "helm_release" "appd-machine-agent" {
  }
 
  set {
-   name = "controller.accessKey"
-   value = var.appd_account_key
+   name = "controller.globalAccountName"
+   value = var.appd_account_name
+ }
+
+ set {
+   name = "analytics.eventEndpoint"
+   value = "https://analytics.api.appdynamics.com"
  }
 
  set {
