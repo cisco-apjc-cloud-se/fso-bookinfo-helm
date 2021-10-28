@@ -98,17 +98,17 @@ resource "kubernetes_namespace" "appd" {
   }
 }
 
-resource "kubernetes_namespace" "metrics" {
-  metadata {
-    annotations = {
-      name = "metrics"
-    }
-    labels = {
-      app = "metrics"
-    }
-    name = "metrics"
-  }
-}
+// resource "kubernetes_namespace" "metrics" {
+//   metadata {
+//     annotations = {
+//       name = "metrics"
+//     }
+//     labels = {
+//       app = "metrics"
+//     }
+//     name = "metrics"
+//   }
+// }
 
 ### Helm ###
 
@@ -179,7 +179,7 @@ resource "helm_release" "bookinfo" {
 
 resource "helm_release" "metrics-server" {
   name = "metrics-server"
-  namespace = "metrics"
+  namespace = "kube-system"
   repository = "https://charts.bitnami.com/bitnami"
   chart = "metrics-server"
 
@@ -188,15 +188,15 @@ resource "helm_release" "metrics-server" {
     value = true
   }
 
-  set {
-    name = "extraArgs.kubelet-insecure-tls"
-    value = true
-  }
-
-  set {
-    name = "extraArgs.kubelet-preferred-address-types"
-    value = "InternalIP"
-  }
+  // set {
+  //   name = "extraArgs.kubelet-insecure-tls"
+  //   value = true
+  // }
+  //
+  // set {
+  //   name = "extraArgs.kubelet-preferred-address-types"
+  //   value = "InternalIP"
+  // }
 
   ### Need to double escape the comma
   // set {
