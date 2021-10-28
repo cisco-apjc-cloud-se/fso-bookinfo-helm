@@ -231,13 +231,23 @@ resource "helm_release" "appd-cluster-agent" {
 
 }
 
- ## Add Kube State Metrics Release  ##
- resource "helm_release" "kube-state-metrics" {
-  namespace   = "kube-system"
-  name        = "kube-state-metrics"
+//  ## Add Kube State Metrics Release  ##
+//  resource "helm_release" "kube-state-metrics" {
+//   namespace   = "kube-system"
+//   name        = "kube-state-metrics"
+//
+//   repository  = "https://prometheus-community.github.io/helm-charts"
+//   chart       = "kube-state-metrics"
+//
+// }
 
-  repository  = "https://prometheus-community.github.io/helm-charts"
-  chart       = "kube-state-metrics"
+## Add Prometheus (Kube-state-metrics, node-exporter, alertmanager)  ##
+resource "helm_release" "prometheus" {
+ namespace   = "kube-system"
+ name        = "prometheus"
+
+ repository  = "https://prometheus-community.github.io/helm-charts"
+ chart       = "prometheus"
 
 }
 
