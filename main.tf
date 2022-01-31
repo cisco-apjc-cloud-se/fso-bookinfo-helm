@@ -98,81 +98,81 @@ resource "kubernetes_namespace" "appd" {
   }
 }
 
-// resource "kubernetes_namespace" "metrics" {
-//   metadata {
-//     annotations = {
-//       name = "metrics"
-//     }
-//     labels = {
-//       app = "metrics"
-//     }
-//     name = "metrics"
-//   }
-// }
+resource "kubernetes_namespace" "metrics" {
+  metadata {
+    annotations = {
+      name = "metrics"
+    }
+    labels = {
+      app = "metrics"
+    }
+    name = "metrics"
+  }
+}
 
 ### Helm ###
 
-## Add IWO K8S Collector Release ##
-resource "helm_release" "iwo-collector" {
- namespace   = kubernetes_namespace.iwo-collector.metadata[0].name
- name        = "iwo-collector"
+// ## Add IWO K8S Collector Release ##
+// resource "helm_release" "iwo-collector" {
+//  namespace   = kubernetes_namespace.iwo-collector.metadata[0].name
+//  name        = "iwo-collector"
+//
+//  chart       = var.iwo_chart_url
+//
+//  set {
+//    name  = "iwoServerVersion"
+//    value = var.iwo_server_version
+//  }
+//
+//  set {
+//    name  = "collectorImage.tag"
+//    value = var.iwo_collector_image_version
+//  }
+//
+//  set {
+//    name  = "targetName"
+//    value = var.iwo_cluster_name
+//  }
+// }
 
- chart       = var.iwo_chart_url
-
- set {
-   name  = "iwoServerVersion"
-   value = var.iwo_server_version
- }
-
- set {
-   name  = "collectorImage.tag"
-   value = var.iwo_collector_image_version
- }
-
- set {
-   name  = "targetName"
-   value = var.iwo_cluster_name
- }
-}
-
-## Add Bookinfo Release  ##
-resource "helm_release" "bookinfo" {
- namespace   = kubernetes_namespace.bookinfo.metadata[0].name
- name        = "bookinfo"
-
- chart       = var.bookinfo_chart_url
-
- set {
-   name  = "appDynamics.account_name"
-   value = var.appd_account_name
- }
-
- set {
-   name  = "appDynamics.account_key"
-   value = var.appd_account_key
- }
-
- set {
-   name  = "detailsService.replicaCount"
-   value = var.detailsService_replica_count
- }
-
- set {
-   name  = "ratingsService.replicaCount"
-   value = var.ratingsService_replica_count
- }
-
- set {
-   name  = "reviewsService.replicaCount"
-   value = var.reviewsService_replica_count
- }
-
- set {
-   name  = "productPageService.replicaCount"
-   value = var.productPageService_replica_count
- }
-
-}
+// ## Add Bookinfo Release  ##
+// resource "helm_release" "bookinfo" {
+//  namespace   = kubernetes_namespace.bookinfo.metadata[0].name
+//  name        = "bookinfo"
+//
+//  chart       = var.bookinfo_chart_url
+//
+//  set {
+//    name  = "appDynamics.account_name"
+//    value = var.appd_account_name
+//  }
+//
+//  set {
+//    name  = "appDynamics.account_key"
+//    value = var.appd_account_key
+//  }
+//
+//  set {
+//    name  = "detailsService.replicaCount"
+//    value = var.detailsService_replica_count
+//  }
+//
+//  set {
+//    name  = "ratingsService.replicaCount"
+//    value = var.ratingsService_replica_count
+//  }
+//
+//  set {
+//    name  = "reviewsService.replicaCount"
+//    value = var.reviewsService_replica_count
+//  }
+//
+//  set {
+//    name  = "productPageService.replicaCount"
+//    value = var.productPageService_replica_count
+//  }
+//
+// }
 
 ## Add Metrics Server Release ##
 # - Required for AppD Cluster Agent
@@ -200,112 +200,116 @@ resource "helm_release" "metrics-server" {
 
 }
 
-## Add Appd Cluster Agent Release  ##
-resource "helm_release" "appd-cluster-agent" {
- namespace   = kubernetes_namespace.appd.metadata[0].name
- name        = "appd-cluster-agent"
+// ## Add Appd Cluster Agent Release  ##
+// resource "helm_release" "appd-cluster-agent" {
+//  namespace   = kubernetes_namespace.appd.metadata[0].name
+//  name        = "appd-cluster-agent"
+//
+//  repository  = "https://ciscodevnet.github.io/appdynamics-charts"
+//  chart       = "cluster-agent"
+//
+//  set {
+//    name = "controllerInfo.url"
+//    value = format("https://%s.saas.appdynamics.com:443", var.appd_account_name)
+//  }
+//
+//  set {
+//    name = "controllerInfo.account"
+//    value = var.appd_account_name
+//  }
+//
+//  set {
+//    name = "controllerInfo.accessKey"
+//    value = var.appd_account_key
+//  }
+//
+//  ## Monitor All Namespaces
+//  set {
+//    name = "clusterAgent.nsToMonitorRegex"
+//    value = ".*"
+//  }
+//
+//  depends_on = [helm_release.metrics-server]
+// }
+//
+// ## Add Appd Machine Agent Release  ##
+// resource "helm_release" "appd-machine-agent" {
+//  namespace   = kubernetes_namespace.appd.metadata[0].name
+//  name        = "appd-machine-agent"
+//
+//  repository  = "https://ciscodevnet.github.io/appdynamics-charts"
+//  chart       = "machine-agent"
+//
+//  // helm install --namespace=appdynamics \
+//  // --set .accessKey=<controller-key> \
+//  // --set .host=<*.saas.appdynamics.com> \
+//  // --set controller.port=443 --set controller.ssl=true \
+//  // --set controller.accountName=<account-name> \
+//  // --set controller.globalAccountName=<global-account-name> \
+//  // --set analytics.eventEndpoint=https://analytics.api.appdynamics.com \
+//  // --set agent.netviz=true serverviz appdynamics-charts/machine-agent
+//
+//  set {
+//    name = "controller.accessKey"
+//    value = var.appd_account_key
+//  }
+//
+//  set {
+//    name = "controller.host"
+//    value = format("%s.saas.appdynamics.com", var.appd_account_name)
+//  }
+//
+//  set {
+//    name = "controller.port"
+//    value = 443
+//  }
+//
+//  set {
+//    name = "controller.ssl"
+//    value = true
+//  }
+//
+//  set {
+//    name = "controller.accountName"
+//    value = var.appd_account_name
+//  }
+//
+//  set {
+//    name = "controller.globalAccountName"
+//    value = var.appd_account_name
+//  }
+//
+//  set {
+//    name = "analytics.eventEndpoint"
+//    value = "https://analytics.api.appdynamics.com"
+//  }
+//
+//  set {
+//    name = "agent.netviz"
+//    value = true
+//  }
+//
+//  set {
+//    name = "openshift.scc"
+//    value = false
+//  }
+//
+//  depends_on = [helm_release.metrics-server]
+// }
 
- repository  = "https://ciscodevnet.github.io/appdynamics-charts"
- chart       = "cluster-agent"
+// ## Add Prometheus (Kube-state-metrics, node-exporter, alertmanager)  ##
+// resource "helm_release" "prometheus" {
+//  namespace   = "kube-system"
+//  name        = "prometheus"
+//
+//  repository  = "https://prometheus-community.github.io/helm-charts"
+//  chart       = "prometheus"
+//
+// }
 
- set {
-   name = "controllerInfo.url"
-   value = format("https://%s.saas.appdynamics.com:443", var.appd_account_name)
- }
 
- set {
-   name = "controllerInfo.account"
-   value = var.appd_account_name
- }
 
- set {
-   name = "controllerInfo.accessKey"
-   value = var.appd_account_key
- }
 
- ## Monitor All Namespaces
- set {
-   name = "clusterAgent.nsToMonitorRegex"
-   value = ".*"
- }
-
- depends_on = [helm_release.metrics-server]
-}
-
-## Add Appd Machine Agent Release  ##
-resource "helm_release" "appd-machine-agent" {
- namespace   = kubernetes_namespace.appd.metadata[0].name
- name        = "appd-machine-agent"
-
- repository  = "https://ciscodevnet.github.io/appdynamics-charts"
- chart       = "machine-agent"
-
- // helm install --namespace=appdynamics \
- // --set .accessKey=<controller-key> \
- // --set .host=<*.saas.appdynamics.com> \
- // --set controller.port=443 --set controller.ssl=true \
- // --set controller.accountName=<account-name> \
- // --set controller.globalAccountName=<global-account-name> \
- // --set analytics.eventEndpoint=https://analytics.api.appdynamics.com \
- // --set agent.netviz=true serverviz appdynamics-charts/machine-agent
-
- set {
-   name = "controller.accessKey"
-   value = var.appd_account_key
- }
-
- set {
-   name = "controller.host"
-   value = format("%s.saas.appdynamics.com", var.appd_account_name)
- }
-
- set {
-   name = "controller.port"
-   value = 443
- }
-
- set {
-   name = "controller.ssl"
-   value = true
- }
-
- set {
-   name = "controller.accountName"
-   value = var.appd_account_name
- }
-
- set {
-   name = "controller.globalAccountName"
-   value = var.appd_account_name
- }
-
- set {
-   name = "analytics.eventEndpoint"
-   value = "https://analytics.api.appdynamics.com"
- }
-
- set {
-   name = "agent.netviz"
-   value = true
- }
-
- set {
-   name = "openshift.scc"
-   value = false
- }
-
- depends_on = [helm_release.metrics-server]
-}
-
-## Add Prometheus (Kube-state-metrics, node-exporter, alertmanager)  ##
-resource "helm_release" "prometheus" {
- namespace   = "kube-system"
- name        = "prometheus"
-
- repository  = "https://prometheus-community.github.io/helm-charts"
- chart       = "prometheus"
-
-}
 
 // // kubectl -n iwo-collector port-forward my-iwo-k8s-collector-57fcb8b874-s5ch8 9110
 // // curl -s http://localhost:9110/DeviceIdentifiers
